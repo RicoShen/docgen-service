@@ -1,0 +1,12 @@
+youland:
+  service:
+    docsUrl: /gendocs
+    test:
+      test2: testvalue
+
+third:
+  url:
+    docshell:
+      urlBase: http://localhost:8088/docgen
+    docgen:
+      urlBase: http://localhost:8088/docgen
