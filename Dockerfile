@@ -8,7 +8,6 @@ FROM eclipse-temurin:17.0.3_7-jre
 
 # set work directory
 WORKDIR /app
-WORKDIR /gendocs
 
 ARG PROJECT_NAME=docgen-service
 
