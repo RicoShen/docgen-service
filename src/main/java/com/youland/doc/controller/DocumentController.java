@@ -31,7 +31,10 @@ public class DocumentController {
     }
 
     @PostMapping("/generate")
-    public ResponseEntity<Void> genLoanDocument(@RequestBody DocumentDTO  documentDTO){
+    public ResponseEntity<Void> genLoanDocument(@RequestBody DocumentDTO  documentDto){
+
+        String fileName = thirdService.generateWordByTemplate(documentDto);
+        thirdService.convertDocToPdf(fileName);
 
         // loanId ,sourceFileName(UUID.docx), genFileName(UUID.docx,UUID.pdf),
         //（1）上传附件至gendocs目录(UUID)
