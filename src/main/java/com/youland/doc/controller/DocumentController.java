@@ -21,6 +21,20 @@ public class DocumentController {
 
     private final ThirdService thirdService;
 
+    @PostMapping("/generate")
+    public ResponseEntity<String> genLoanDocument(@RequestBody DocumentDTO  documentDto){
+
+        String fileName = thirdService.generateWordByTemplate(documentDto);
+        String pdfFileName = thirdService.convertDocToPdf(fileName);
+
+        // loanId ,sourceFileName(UUID.docx), genFileName(UUID.docx,UUID.pdf),
+        //（1）上传附件至gendocs目录(UUID)
+        //（2）把word转化为pdf
+        //（3）把word和pdf通过邮件发送给loanOfficer（收件人邮箱)
+        //（4）异步把附件上传至s3,并关联loanId; （mike提供接口，保存附件与loanId关联）
+        return  ResponseEntity.accepted().body(pdfFileName);
+    }
+
     @PutMapping("/upload")
     public ResponseEntity<Void> uploadAttachmentFile(@RequestParam("file") MultipartFile file){
 
@@ -28,20 +42,6 @@ public class DocumentController {
 
         return  ResponseEntity.accepted().build();
 
-    }
-
-    @PostMapping("/generate")
-    public ResponseEntity<Void> genLoanDocument(@RequestBody DocumentDTO  documentDto){
-
-        String fileName = thirdService.generateWordByTemplate(documentDto);
-        thirdService.convertDocToPdf(fileName);
-
-        // loanId ,sourceFileName(UUID.docx), genFileName(UUID.docx,UUID.pdf),
-        //（1）上传附件至gendocs目录(UUID)
-        //（2）把word转化为pdf
-        //（3）把word和pdf通过邮件发送给loanOfficer（收件人邮箱)
-        //（4）异步把附件上传至s3,并关联loanId; （mike提供接口，保存附件与loanId关联）
-        return  ResponseEntity.accepted().build();
     }
 
     @PostMapping("/resend")

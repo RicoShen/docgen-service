@@ -9,5 +9,6 @@ import lombok.Data;
 @Data
 public class DocumentDTO {
 
+    private String loanId;
     private String fileName;
 }
