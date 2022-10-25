@@ -1,9 +1,11 @@
 package com.youland.doc.service;
 
 import com.youland.doc.dto.DocumentDTO;
+import com.youland.doc.dto.DocumentSource;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
+import java.util.List;
 
 /**
  * @author: rico
@@ -12,6 +14,8 @@ import java.io.IOException;
 public interface ThirdService {
 
     String generateWordByTemplate(DocumentDTO documentDto);
+
+    String sendDocumentByTemplate(List<String> fileUrls, DocumentSource documentSource)  throws Exception ;
 
     String convertDocToPdf(String fileName);
 

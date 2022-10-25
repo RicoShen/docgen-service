@@ -1,21 +1,31 @@
 package com.youland.doc.service.impl;
 
 import com.deepoove.poi.XWPFTemplate;
+import com.google.common.io.BaseEncoding;
 import com.google.common.io.Files;
 import com.youland.doc.app.config.YoulandConfig;
 import com.youland.doc.client.DocShellClient;
 import com.youland.doc.dto.DocumentDTO;
+import com.youland.doc.dto.DocumentSource;
 import com.youland.doc.service.ThirdService;
 import lombok.RequiredArgsConstructor;
+import org.apache.commons.compress.utils.Lists;
 import org.apache.poi.xwpf.usermodel.XWPFDocument;
 import org.springframework.core.io.ClassPathResource;
+import org.springframework.core.io.InputStreamSource;
+import org.springframework.mail.javamail.JavaMailSender;
+import org.springframework.mail.javamail.MimeMessageHelper;
+import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
+import javax.mail.MessagingException;
+import javax.mail.internet.MimeMessage;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 
@@ -29,6 +39,7 @@ public class ThirdServiceImpl implements ThirdService {
 
     private final YoulandConfig youlandConfig;
     private final DocShellClient docShellClient;
+    private final JavaMailSender mailSender;
 
     @Override
     public String generateWordByTemplate(DocumentDTO documentDto) {
@@ -68,6 +79,33 @@ public class ThirdServiceImpl implements ThirdService {
         } catch (IOException e) {
             e.printStackTrace();
         }
+
+        return null;
+    }
+
+    @Override
+    @Async
+    public String sendDocumentByTemplate(List<String> fileUrls, DocumentSource documentSource) throws Exception {
+
+        List<InputStreamSource> attachments = Lists.newArrayList();
+
+        if (DocumentSource.S3 == documentSource){
+            fileUrls.forEach(url ->{
+                youlandConfig.getDocsUrl().concat("/").concat(url)
+                //attachments.add();
+            });
+        }
+
+        this.mailSender.send(mimeMessage -> {
+            MimeMessageHelper helper = new MimeMessageHelper(mimeMessage, true, "UTF-8");
+            helper.setSubject("test");
+            helper.setText("text",false);
+            helper.setTo("rico@youland.com");
+            helper.setFrom("do-not-reply-support@Youland.com");
+
+            helper.addAttachment("test", );
+        });
+
 
         return null;
     }

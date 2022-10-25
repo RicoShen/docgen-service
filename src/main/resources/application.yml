@@ -9,7 +9,7 @@ app:
 
 spring:
   profiles:
-    active: prod
+    active: dev
   main:
     allow-bean-definition-overriding: true
   servlet:

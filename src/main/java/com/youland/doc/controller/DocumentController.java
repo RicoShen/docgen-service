@@ -24,6 +24,7 @@ public class DocumentController {
     @PostMapping("/generate")
     public ResponseEntity<String> genLoanDocument(@RequestBody DocumentDTO  documentDto){
 
+        // generate docs from state.
         String fileName = thirdService.generateWordByTemplate(documentDto);
         String pdfFileName = thirdService.convertDocToPdf(fileName);
 
@@ -37,9 +38,7 @@ public class DocumentController {
 
     @PutMapping("/upload")
     public ResponseEntity<Void> uploadAttachmentFile(@RequestParam("file") MultipartFile file){
-
         thirdService.convertDocToPdf(file);
-
         return  ResponseEntity.accepted().build();
 
     }
