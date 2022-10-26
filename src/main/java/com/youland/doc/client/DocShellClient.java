@@ -49,4 +49,14 @@ public class DocShellClient {
                 .block(clientBaseSetting.getQueryTimeout());
     }
 
+    public boolean convertWordToHtml(String fileName){
+
+        return webClient.post()
+                .uri("/convert/wordToHtml/{fileName}",fileName)
+                .bodyValue(BodyInserters.empty())
+                .retrieve()
+                .bodyToMono(Boolean.class)
+                .block(clientBaseSetting.getQueryTimeout());
+    }
+
 }

@@ -9,7 +9,6 @@ import com.youland.doc.dto.DocumentDTO;
 import com.youland.doc.dto.DocumentSource;
 import com.youland.doc.service.ThirdService;
 import lombok.RequiredArgsConstructor;
-import org.apache.commons.compress.utils.Lists;
 import org.apache.poi.xwpf.usermodel.XWPFDocument;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.core.io.FileUrlResource;
@@ -85,7 +84,7 @@ public class ThirdServiceImpl implements ThirdService {
 
     @Override
     @Async
-    public String sendDocumentByTemplate(List<String> fileUrls, DocumentSource documentSource) {
+    public String sendDocumentByTemplate(List<String> fileUrls, DocumentSource documentSource, String email) {
 
         Map<String,InputStreamSource> attachments = Maps.newHashMap();
 
@@ -102,7 +101,7 @@ public class ThirdServiceImpl implements ThirdService {
             MimeMessageHelper helper = new MimeMessageHelper(mimeMessage, true, "UTF-8");
             helper.setSubject("test");
             helper.setText("text",false);
-            helper.setTo("rico@youland.com");
+            helper.setTo(email);
             helper.setFrom("do-not-reply-support@Youland.com");
             for (String key : attachments.keySet()) {
                 helper.addAttachment(key, attachments.get(key));
@@ -113,6 +112,7 @@ public class ThirdServiceImpl implements ThirdService {
         }catch (IOException e){
             e.printStackTrace();
         }
+
         return null;
     }
 
@@ -120,6 +120,12 @@ public class ThirdServiceImpl implements ThirdService {
     public String convertDocToPdf(String fileName) {
         docShellClient.convertWordToPdf(fileName);
         return Files.getNameWithoutExtension(fileName).concat(".pdf");
+    }
+
+    @Override
+    public String convertDocToHtml(String fileName) {
+        docShellClient.convertWordToHtml(fileName);
+        return Files.getNameWithoutExtension(fileName).concat(".html");
     }
 
     @Override

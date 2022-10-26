@@ -15,9 +15,11 @@ public interface ThirdService {
 
     String generateWordByTemplate(DocumentDTO documentDto);
 
-    String sendDocumentByTemplate(List<String> fileUrls, DocumentSource documentSource);
+    String sendDocumentByTemplate(List<String> fileUrls, DocumentSource documentSource, String email);
 
     String convertDocToPdf(String fileName);
+
+    String convertDocToHtml(String fileName);
 
     String convertDocToPdf(MultipartFile file);
 

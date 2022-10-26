@@ -2,6 +2,7 @@ package com.youland.doc.controller;
 
 
 import com.google.common.collect.Lists;
+import com.youland.commons.utils.UploadUtil;
 import com.youland.doc.dto.DocumentDTO;
 import com.youland.doc.dto.DocumentSource;
 import com.youland.doc.service.ThirdService;
@@ -35,14 +36,17 @@ public class DocumentController {
         //（2）把word转化为pdf
         //（3）把word和pdf通过邮件发送给loanOfficer（收件人邮箱)
         //（4）异步把附件上传至s3,并关联loanId; （mike提供接口，保存附件与loanId关联）
-        thirdService.sendDocumentByTemplate(Lists.newArrayList(fileName, pdfFileName), DocumentSource.LOCAL);
+        String email = "rico@youland.com";
+        thirdService.sendDocumentByTemplate(Lists.newArrayList(fileName, pdfFileName), DocumentSource.LOCAL, email);
 
         return  ResponseEntity.accepted().body(pdfFileName);
     }
 
     @PutMapping("/upload")
     public ResponseEntity<Void> uploadAttachmentFile(@RequestParam("file") MultipartFile file){
-        thirdService.convertDocToPdf(file);
+
+
+
         return  ResponseEntity.accepted().build();
 
     }

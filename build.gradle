@@ -7,7 +7,7 @@ plugins {
 
 group = 'com.youland'
 version = '0.0.1-SNAPSHOT'
-sourceCompatibility = '1.8'
+sourceCompatibility = '17'
 
 configurations {
     compileOnly {
@@ -15,9 +15,22 @@ configurations {
     }
 }
 
-
 repositories {
     mavenCentral()
+    maven { url "https://oss.jfrog.org/artifactory/oss-snapshot-local" }
+    maven {
+        url "${jfrog_url}"
+        credentials { // Optional resolver credentials (leave out to use anonymous resolution)
+            username = "${jfrog_user}" // Artifactory user name
+            password = "${jfrog_password}" // Password or API Key
+        }
+    }
+}
+
+configurations.all {
+    // Define the interval between checking for dependency changes
+    //If the value is set to 0, real-time refresh and not use local cache
+    resolutionStrategy.cacheChangingModulesFor 0, 'seconds'
 }
 
 bootJar {
@@ -28,11 +41,14 @@ jar {
 }
 
 ext {
-    jodconverterVersion = '4.3.0'
+    commonsVersion = '0.1-SNAPSHOT'
 }
 
 
 dependencies {
+    // Youland
+    implementation "com.youland:pos-commons-java:${commonsVersion}"
+
     implementation 'org.springframework.boot:spring-boot-starter'
     implementation 'org.springframework.boot:spring-boot-starter-web'
     implementation 'org.springframework.boot:spring-boot-starter-webflux'
