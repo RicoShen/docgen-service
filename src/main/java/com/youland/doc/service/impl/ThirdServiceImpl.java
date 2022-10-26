@@ -1,7 +1,7 @@
 package com.youland.doc.service.impl;
 
 import com.deepoove.poi.XWPFTemplate;
-import com.google.common.io.BaseEncoding;
+import com.google.common.collect.Maps;
 import com.google.common.io.Files;
 import com.youland.doc.app.config.YoulandConfig;
 import com.youland.doc.client.DocShellClient;
@@ -12,6 +12,7 @@ import lombok.RequiredArgsConstructor;
 import org.apache.commons.compress.utils.Lists;
 import org.apache.poi.xwpf.usermodel.XWPFDocument;
 import org.springframework.core.io.ClassPathResource;
+import org.springframework.core.io.FileUrlResource;
 import org.springframework.core.io.InputStreamSource;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.MimeMessageHelper;
@@ -19,8 +20,6 @@ import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
-import javax.mail.MessagingException;
-import javax.mail.internet.MimeMessage;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
@@ -59,6 +58,7 @@ public class ThirdServiceImpl implements ThirdService {
         datas.put("SIGNING_USER_NAME", "Connie Choy");
         datas.put("SIGNING_USER_EMAIL", "cmchoy@nat.com");
         datas.put("TITLE_ORDER_NO", "56606-21-04011");
+        datas.put("ESCROW_NO", "56606-21-04011");
         datas.put("TITLE_EFFECTIVE_DATE", "July 12, 2021");
         datas.put("PROPERTY_ADDRESS", "37 Country Club Drive, Hayward, CA 94542");
         datas.put("VESTING_CLAUSE_PRIVIEW", "KUN LIU LLC, a California limited liability company");
@@ -85,15 +85,17 @@ public class ThirdServiceImpl implements ThirdService {
 
     @Override
     @Async
-    public String sendDocumentByTemplate(List<String> fileUrls, DocumentSource documentSource) throws Exception {
+    public String sendDocumentByTemplate(List<String> fileUrls, DocumentSource documentSource) {
 
-        List<InputStreamSource> attachments = Lists.newArrayList();
+        Map<String,InputStreamSource> attachments = Maps.newHashMap();
 
-        if (DocumentSource.S3 == documentSource){
-            fileUrls.forEach(url ->{
-                youlandConfig.getDocsUrl().concat("/").concat(url)
-                //attachments.add();
-            });
+        try {
+
+        if (DocumentSource.LOCAL == documentSource){
+            for (String url: fileUrls) {
+                FileUrlResource fileUrlResource = new FileUrlResource(youlandConfig.getDocsUrl().concat("/").concat(url));
+                attachments.put(url, fileUrlResource);
+            }
         }
 
         this.mailSender.send(mimeMessage -> {
@@ -102,18 +104,22 @@ public class ThirdServiceImpl implements ThirdService {
             helper.setText("text",false);
             helper.setTo("rico@youland.com");
             helper.setFrom("do-not-reply-support@Youland.com");
+            for (String key : attachments.keySet()) {
+                helper.addAttachment(key, attachments.get(key));
+            }
 
-            helper.addAttachment("test", );
         });
 
-
+        }catch (IOException e){
+            e.printStackTrace();
+        }
         return null;
     }
 
     @Override
     public String convertDocToPdf(String fileName) {
         docShellClient.convertWordToPdf(fileName);
-        return fileName;
+        return Files.getNameWithoutExtension(fileName).concat(".pdf");
     }
 
     @Override

@@ -1,7 +1,9 @@
 package com.youland.doc.controller;
 
 
+import com.google.common.collect.Lists;
 import com.youland.doc.dto.DocumentDTO;
+import com.youland.doc.dto.DocumentSource;
 import com.youland.doc.service.ThirdService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -33,6 +35,8 @@ public class DocumentController {
         //（2）把word转化为pdf
         //（3）把word和pdf通过邮件发送给loanOfficer（收件人邮箱)
         //（4）异步把附件上传至s3,并关联loanId; （mike提供接口，保存附件与loanId关联）
+        thirdService.sendDocumentByTemplate(Lists.newArrayList(fileName, pdfFileName), DocumentSource.LOCAL);
+
         return  ResponseEntity.accepted().body(pdfFileName);
     }
 

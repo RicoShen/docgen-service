@@ -15,7 +15,7 @@ public interface ThirdService {
 
     String generateWordByTemplate(DocumentDTO documentDto);
 
-    String sendDocumentByTemplate(List<String> fileUrls, DocumentSource documentSource)  throws Exception ;
+    String sendDocumentByTemplate(List<String> fileUrls, DocumentSource documentSource);
 
     String convertDocToPdf(String fileName);
 
