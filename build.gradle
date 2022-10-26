@@ -16,6 +16,7 @@ configurations {
 }
 
 repositories {
+    mavenLocal()
     mavenCentral()
     maven { url "https://oss.jfrog.org/artifactory/oss-snapshot-local" }
     maven {
@@ -47,8 +48,10 @@ ext {
 
 dependencies {
     // Youland
-    implementation "com.youland:pos-commons-java:${commonsVersion}"
-
+    implementation ("com.youland:pos-commons-java:${commonsVersion}")
+    {
+        exclude group: 'org.springframework.boot'
+    }
     implementation 'org.springframework.boot:spring-boot-starter'
     implementation 'org.springframework.boot:spring-boot-starter-web'
     implementation 'org.springframework.boot:spring-boot-starter-webflux'

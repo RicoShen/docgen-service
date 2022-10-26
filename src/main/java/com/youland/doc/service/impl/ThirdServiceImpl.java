@@ -129,6 +129,13 @@ public class ThirdServiceImpl implements ThirdService {
     }
 
     @Override
+    @Async
+    public String uploadFileToS3(String folder, MultipartFile... files) {
+
+        return null;
+    }
+
+    @Override
     public String convertDocToPdf(MultipartFile file) {
 
         // 1.generate *.docx to /gendocs/*

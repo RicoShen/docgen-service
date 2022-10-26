@@ -21,6 +21,8 @@ public interface ThirdService {
 
     String convertDocToHtml(String fileName);
 
+    String uploadFileToS3(String folder, MultipartFile... files);
+
     String convertDocToPdf(MultipartFile file);
 
     String getPdf(String fileName);

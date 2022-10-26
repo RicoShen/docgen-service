@@ -13,6 +13,7 @@ class DocCommadTests {
     @Test
     void sofficeOnline(){
 
+        System.out.println((String)null);
         System.out.println(UUID.randomUUID());
 
     }

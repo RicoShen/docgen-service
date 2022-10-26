@@ -45,7 +45,7 @@ public class DocumentController {
     @PutMapping("/upload")
     public ResponseEntity<Void> uploadAttachmentFile(@RequestParam("file") MultipartFile file){
 
-
+        UploadUtil.batchUploadFileToFolder("test-456", file);
 
         return  ResponseEntity.accepted().build();
 
